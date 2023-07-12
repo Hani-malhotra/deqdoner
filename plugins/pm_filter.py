@@ -42,6 +42,7 @@ SPELL_CHECK = {}
 async def give_filter(client, message):
     settings = await get_settings(message.chat.id)
     if message.chat.id != SUPPORT_CHAT_ID:
+    try:    
 	if settings['filter_mode']:
             glob = await global_filters(client, message)
             if glob == False:

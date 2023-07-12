@@ -77,7 +77,7 @@ async def next_adv_page(bot, page):
         offset = int(offset) # if offset is None
     except:
         offset = 0
-    query = BUTTONS.get(key)
+    search = BUTTONS.get(key)
     if not query: #if query is not found
         return await page.answer(script.OLD_ALRT_TXT.format(page.from_user.first_name), show_alert=True)
     files, n_offset, total = await get_search_results(query.message.chat.id, search, offset=offset, filter=True)  #await get_search_results(query.message.chat.id ,search.lower(), offset=0, filter=True) 

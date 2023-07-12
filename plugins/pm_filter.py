@@ -66,6 +66,88 @@ async def give_filter(client, message):
                 parse_mode=enums.ParseMode.HTML
             )
 
+#add page link
+
+@Client.on_callback_query(filters.regex(r"^nextadv"))
+async def next_adv_page(bot, page):
+    ident, req, key, offset = page.data.split("_")
+    if int(req) != int(page.from_user.id) and int(req) != 0: #user is not the requester
+        return await page.answer(script.ALRT_TXT.format(page.from_user.first_name), show_alert=True)
+    try:
+        offset = int(offset) # if offset is None
+    except:
+        offset = 0
+    query = BUTTONS.get(key)
+    if not query: #if query is not found
+        return await page.answer(script.OLD_ALRT_TXT.format(page.from_user.first_name), show_alert=True)
+    files, n_offset, total = await get_search_results(query, offset=offset, filter=True) #fetch files
+    try:
+        n_offset = int(n_offset) # if next offset is None
+    except:
+        n_offset = 0
+    if not files: # if no files found
+        return
+    settings = await get_settings(page.message.chat.id) # fetch settings
+    i = int(offset)+1
+    chat_id = page.message.chat.id
+    temp.CHAT[int(page.from_user.id)] = int(chat_id) #set chat id
+    cap = temp.CAP.get(key)
+    for file in files: #looping through each file
+        if ENABLE_SHORTLINK: # if shortlink is enabled
+            shorted = await get_shortlink(f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
+            cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            i+=1
+        else:
+            link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
+            cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            i+=1
+    btn = [[
+        InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
+    ]]
+    # main page algorithm
+    if 0 < offset <= 10:
+        off_set = 0
+    elif offset == 0:
+        off_set = None
+    else:
+        off_set = offset - 10
+    if n_offset == 0:
+        btn.insert(0,
+            [InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"nextadv_{req}_{key}_{off_set}"), InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages")]
+        )
+    elif off_set is None:
+        btn.insert(0,
+            [InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages"), InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"nextadv_{req}_{key}_{n_offset}")]
+        )
+    else:
+        btn.insert(0,
+            [
+                InlineKeyboardButton("⌫ 𝐁𝐀𝐂𝐊", callback_data=f"nextadv_{req}_{key}_{off_set}"),
+                InlineKeyboardButton(f"{math.ceil(int(offset)/10)+1} / {math.ceil(total/10)}", callback_data="pages"),
+                InlineKeyboardButton("𝐍𝐄𝐗𝐓 ➪", callback_data=f"nextadv_{req}_{key}_{n_offset}")
+            ],
+        )
+    if len(cap)>1024: # if CAPTION_TOO_LONG
+        cap = cap.replace(temp.CAP.get(key), f"<b>Hey {page.from_user.mention}, Here are the results for your query {query}!</b>")
+    try:
+        await page.message.edit_text(
+            text=cap, #edit text
+	    parse_mode=enums.ParseMode.HTML
+        )
+        await page.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(btn) #edit btns
+        )
+    except MessageNotModified: #if message not modified exception occurred
+        pass
+    except FloodWait as e: # if floodwait occurred
+        await page.answer(f"Got FloodWait ! Wait for {e.value} seconds...", show_alert=True)
+        await asyncio.sleep(e.value) # sleep for specified time
+        await page.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(btn) # edit btns
+	)
+
+#page link
+
 @Client.on_message(filters.private & filters.text & filters.incoming)
 async def pm_text(bot, message):
     content = message.text
@@ -1516,8 +1598,123 @@ async def cb_handler(client: Client, query: CallbackQuery):
             reply_markup = InlineKeyboardMarkup(buttons)
             await query.message.edit_reply_markup(reply_markup)
     await query.answer(MSG_ALRT)
+# page link
 
-    
+async def advance_filter(client, msg, is_callback=False): #text type autofilter (without buttons)
+    if not is_callback: #if msg is not callback
+        settings = await get_settings(msg.chat.id) #fetch settings
+        if msg.text.startswith("/") or re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", msg.text): return #ignore cmds
+        if len(msg.text) < 100: #allow msgs only with characters less than 100
+            message = msg
+            search = message.text
+            chat_id = message.chat.id
+            files, offset, total = await get_search_results(search.lower(), offset=0, filter=True) #search for files
+            if not files: #if not files are found
+                if settings["spell_check"]: #if spell check is enabled
+                    return await advantage_spell_chok(message)
+                else:
+                    return
+        else:
+            return
+    else:
+        message = msg.message.reply_to_message #msg will be callback
+        chat_id = message.chat.id
+        search, files, offset, total = is_callback
+        settings = await get_settings(chat_id) #fetch settings
+    temp.CHAT[int(message.from_user.id)] = message.chat.id #set chat id
+    imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None # fetch poster and caption from imdb if enabled
+    TEMPLATE = settings['template'] #fetch template (custom)
+    if imdb: #if imdb is not none
+        cap = TEMPLATE.format(
+            query=search,
+            title=imdb['title'],
+            votes=imdb['votes'],
+            aka=imdb["aka"],
+            seasons=imdb["seasons"],
+            box_office=imdb['box_office'],
+            localized_title=imdb['localized_title'],
+            kind=imdb['kind'],
+            imdb_id=imdb["imdb_id"],
+            cast=imdb["cast"],
+            runtime=imdb["runtime"],
+            countries=imdb["countries"],
+            certificates=imdb["certificates"],
+            languages=imdb["languages"],
+            director=imdb["director"],
+            writer=imdb["writer"],
+            producer=imdb["producer"],
+            composer=imdb["composer"],
+            cinematographer=imdb["cinematographer"],
+            music_team=imdb["music_team"],
+            distributors=imdb["distributors"],
+            release_date=imdb['release_date'],
+            year=imdb['year'],
+            genres=imdb['genres'],
+            poster=imdb['poster'],
+            plot=imdb['plot'],
+            rating=imdb['rating'],
+            url=imdb['url'],
+            **locals()
+        )
+    else: #if imdb is none
+        cap = f"<b>Hᴇʏ {message.from_user.mention}, Hᴇʀᴇ ɪs Wʜᴀᴛ I Fᴏᴜɴᴅ Iɴ Mʏ Dᴀᴛᴀʙᴀsᴇ Fᴏʀ Yᴏᴜʀ Qᴜᴇʀʏ {search}.</b>"
+    temp_cap = cap
+    i = 1
+    for file in files: #looping through each file
+        if ENABLE_SHORTLINK: # if shortlink is enabled
+            shorted = await get_shortlink(f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
+            cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            i+=1
+        else:
+            link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
+            cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            i+=1
+    btn = [[
+        InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
+    ]]
+    if len(cap)>1024: #if CAPTION_TOO_LONG
+        cap = cap.replace(temp_cap, f"<b>Hey {message.from_user.mention}, Here are the results for your query {search} !</b>") #Replace IMDb template
+    if offset != "": #if offset is not ""
+        key = f"{message.chat.id}-{message.id}" #generate key
+        temp.CAP[key] = temp_cap #save IMDb caption
+        BUTTONS[key] = search #save keyword
+        req = message.from_user.id if message.from_user else 0
+        btn.insert(0,
+            [InlineKeyboardButton("𝐏𝐀𝐆𝐄", callback_data="pages"), InlineKeyboardButton(text=f"1/{math.ceil(int(total)/10)}",callback_data="pages"), InlineKeyboardButton(text="𝐍𝐄𝐗𝐓 ➪",callback_data=f"nextadv_{req}_{key}_{offset}")]
+        )
+    else:
+        btn.insert(0,
+            [InlineKeyboardButton(text="𝐍𝐎 𝐌𝐎𝐑𝐄 𝐏𝐀𝐆𝐄𝐒 𝐀𝐕𝐀𝐈𝐋𝐀𝐁𝐋𝐄",callback_data="pages")]
+        )
+    if imdb and imdb.get('poster'):
+        try:
+            hehe = await message.reply_photo(photo=imdb.get('poster'), caption=cap, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML)
+            await asyncio.sleep(600)
+            await hehe.delete()
+            await message.delete()
+        except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
+            pic = imdb.get('poster')
+            poster = pic.replace('.jpg', "._V1_UX360.jpg")
+            hmm = await message.reply_photo(photo=poster, caption=cap, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML)
+            await asyncio.sleep(600)
+            await hmm.delete()
+            await message.delete()
+        except Exception as e:
+            logger.exception(e)
+            fek = await message.reply_text(text=cap, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML)
+            await asyncio.sleep(600)
+            await fek.delete()
+            await message.delete()
+    else:
+        fuk = await message.reply_text(text=cap, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML)
+        await asyncio.sleep(600)
+        await fuk.delete()
+        await message.delete()
+    if is_callback:
+        await msg.message.delete()
+
+# page link
+
 async def auto_filter(client, msg, spoll=False):
     reqstr1 = msg.from_user.id if msg.from_user else 0
     reqstr = await client.get_users(reqstr1)

@@ -69,7 +69,7 @@ async def give_filter(client, message):
 #add page link
 
 @Client.on_callback_query(filters.regex(r"^nextadv"))
-async def next_adv_page(bot, page, query):
+async def next_adv_page(bot, page):
     ident, req, key, offset = page.data.split("_")
     if int(req) != int(page.from_user.id) and int(req) != 0: #user is not the requester
         return await page.answer(script.ALRT_TXT.format(page.from_user.first_name), show_alert=True)
@@ -80,7 +80,7 @@ async def next_adv_page(bot, page, query):
     search = BUTTONS.get(key)
     if not search: #if query is not found
         return await page.answer(script.OLD_ALRT_TXT.format(page.from_user.first_name), show_alert=True)
-    files, n_offset, total = await get_search_results(query.message.chat.id, search, offset=offset, filter=True)  #await get_search_results(query.message.chat.id ,search.lower(), offset=0, filter=True) 
+    files, n_offset, total = await get_search_results(page.message.chat.id, search, offset=offset, filter=True)  #await get_search_results(query.message.chat.id ,search.lower(), offset=0, filter=True) 
 	
     try:
         n_offset = int(n_offset) # if next offset is None

@@ -92,12 +92,12 @@ async def next_adv_page(bot, page):
     chat_id = page.message.chat.id
     temp.CHAT[int(page.from_user.id)] = int(chat_id) #set chat id
     cap = temp.CAP.get(key)
+    for file in files: #looping through each file
         if 'is_shortlink' in settings.keys():
             ENABLE_SHORTLINK = settings['is_shortlink']
         else:
             await save_group_settings(query.message.chat.id, 'is_shortlink', False)
-            ENABLE_SHORTLINK = False	
-    for file in files: #looping through each file
+            ENABLE_SHORTLINK = False		    
         if ENABLE_SHORTLINK: # if shortlink is enabled
             shorted = await get_shortlink(f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
             cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"

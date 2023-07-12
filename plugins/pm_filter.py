@@ -67,31 +67,30 @@ async def give_filter(client, message):
             )
 
 #add page link
-
+		
 @Client.on_callback_query(filters.regex(r"^nextadv"))
-async def next_adv_page(bot, query):
-    ident, req, key, offset = query.data.split("_")
-    if int(req) != int(query.from_user.id) and int(req) != 0: #user is not the requester
-        return await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)
+async def next_adv_page(bot, page):
+    ident, req, key, offset = page.data.split("_")
+    if int(req) != int(page.from_user.id) and int(req) != 0: #user is not the requester
+        return await page.answer(script.ALRT_TXT.format(page.from_user.first_name), show_alert=True)
     try:
         offset = int(offset) # if offset is None
     except:
         offset = 0
-    search = BUTTONS.get(key)
-    if not search: #if query is not found
-        return await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name), show_alert=True)
-    files, n_offset, total = await get_search_results(query.message.chat.id, search, offset=offset, filter=True)  #await get_search_results(query.message.chat.id ,search.lower(), offset=0, filter=True) 
-	
+    query = BUTTONS.get(key)
+    if not query: #if query is not found
+        return await page.answer(script.OLD_ALRT_TXT.format(page.from_user.first_name), show_alert=True)
+    files, n_offset, total = await get_search_results(page,message.chat.id, offset=offset, filter=True) #fetch files
     try:
         n_offset = int(n_offset) # if next offset is None
     except:
         n_offset = 0
     if not files: # if no files found
         return
-    settings = await get_settings(query.message.chat.id) # fetch settings
+    settings = await get_settings(page.message.chat.id) # fetch settings
     i = int(offset)+1
-    chat_id = query.message.chat.id
-    temp.CHAT[int(query.from_user.id)] = int(chat_id) #set chat id
+    chat_id = page.message.chat.id
+    temp.CHAT[int(page.from_user.id)] = int(chat_id) #set chat id
     cap = temp.CAP.get(key)
     for file in files: #looping through each file
         if 'is_shortlink' in settings.keys():
@@ -100,7 +99,7 @@ async def next_adv_page(bot, query):
             await save_group_settings(query.message.chat.id, 'is_shortlink', False)
             ENABLE_SHORTLINK = False		    
         if ENABLE_SHORTLINK: # if shortlink is enabled
-            shorted = await get_shortlink(query.message.chat.id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
+            shorted = await get_shortlink(page,message.chat.id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
             cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
             i+=1
         else:
@@ -134,23 +133,24 @@ async def next_adv_page(bot, query):
             ],
         )
     if len(cap)>1024: # if CAPTION_TOO_LONG
-        cap = cap.replace(temp.CAP.get(key), f"<b>Hey {query.from_user.mention}, Here are the results for your query {query}!</b>")
+        cap = cap.replace(temp.CAP.get(key), f"<b>Hey {page.from_user.mention}, Here are the results for your query {query}!</b>")
     try:
-        await query.message.edit_text(
+        await page.message.edit_text(
             text=cap, #edit text
 	    parse_mode=enums.ParseMode.HTML
         )
-        await query.edit_message_reply_markup(
+        await page.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(btn) #edit btns
         )
     except MessageNotModified: #if message not modified exception occurred
         pass
     except FloodWait as e: # if floodwait occurred
-        await query.answer(f"Got FloodWait ! Wait for {e.value} seconds...", show_alert=True)
+        await page.answer(f"Got FloodWait ! Wait for {e.value} seconds...", show_alert=True)
         await asyncio.sleep(e.value) # sleep for specified time
-        await query.edit_message_reply_markup(
+        await page.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(btn) # edit btns
 	)
+
 
 #page link
 

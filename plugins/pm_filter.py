@@ -1617,7 +1617,7 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
             files, offset, total = await get_search_results(message.chat.id ,search.lower(), offset=0, filter=True) #await get_search_results(search.lower(), offset=0, filter=True) #search for files
             if not files: #if not files are found
                 if settings["spell_check"]: #if spell check is enabled
-                    return await advantage_spell_chok(msg)
+                    return await advantage_spell_chok(client, msg)
                 else:
                     return
         else:

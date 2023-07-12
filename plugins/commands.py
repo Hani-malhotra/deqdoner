@@ -629,6 +629,16 @@ async def settings(client, message):
                     callback_data=f'setgs#is_shortlink#{settings["is_shortlink"]}#{grp_id}',
                 ),
             ],
+            [
+                InlineKeyboardButton(
+                    'Results page',
+                    callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{grp_id}',
+                ),
+                InlineKeyboardButton(
+                    'pages' if settings["filter_mode"] else 'link',
+                    callback_data=f'setgs#is_shortlink#{settings["filter_mode"]}#{grp_id}',
+                ),                
+            ],
         ]
 
         btn = [[

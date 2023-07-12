@@ -133,7 +133,7 @@ async def next_adv_page(bot, page):
             ],
         )
     if len(cap)>1024: # if CAPTION_TOO_LONG
-        cap = cap.replace(temp.CAP.get(key), f"<b>Hey {page.from_user.mention}, Here are the results for your query {query}!</b>")
+        cap = cap.replace(temp.CAP.get(key), f"<b>Hey {page.from_user.mention}, Here are the results for your query {search}!</b>")
     try:
         await page.message.edit_text(
             text=cap, #edit text

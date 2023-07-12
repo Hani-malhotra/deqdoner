@@ -1673,7 +1673,7 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
             await save_group_settings(message.chat.id, 'is_shortlink', False)
             ENABLE_SHORTLINK = False	    
         if ENABLE_SHORTLINK: # if shortlink is enabled
-            shorted = await get_shortlink(f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
+            shorted = await get_shortlink(message.chat.id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
             cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
             i+=1
         else:

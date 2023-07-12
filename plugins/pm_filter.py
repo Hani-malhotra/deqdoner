@@ -54,13 +54,13 @@ async def give_filter(client, message):
                             await advance_filter(client, message)
 			      #else:
 			          #await auto_filter(client, message)
-                     except KeyError:
-                          grpid = await active_connection(str(message.from_user.id))
-                          await save_group_settings(grpid, 'auto_ffilter', True)
-                          settings = await get_settings(message.chat.id)
-                          if settings['auto_ffilter']:
+                     #except KeyError:
+                          #grpid = await active_connection(str(message.from_user.id))
+                          #await save_group_settings(grpid, 'auto_ffilter', True)
+                          #settings = await get_settings(message.chat.id)
+                          #if settings['auto_ffilter']:
 			      #if settings['filter_mode']:     
-                             await advance_filter(client, message)    
+                             #await advance_filter(client, message)    
 			     #else:
 			         #await auto_filter(client, message)
 	     else:
@@ -71,13 +71,13 @@ async def give_filter(client, message):
                       settings = await get_settings(message.chat.id)
                       try:
                           if settings['auto_ffilter']:
-                             #await auto_filter(client, message)
-                      except KeyError:
-                         grpid = await active_connection(str(message.from_user.id))
-                         await save_group_settings(grpid, 'auto_ffilter', True)
-                         settings = await get_settings(message.chat.id)
-                         if settings['auto_ffilter']:
-                             await auto_filter(client, message)		    
+                             await auto_filter(client, message)
+                      #except KeyError:
+                         #grpid = await active_connection(str(message.from_user.id))
+                         #await save_group_settings(grpid, 'auto_ffilter', True)
+                         #settings = await get_settings(message.chat.id)
+                         #if settings['auto_ffilter']:
+                             #await auto_filter(client, message)		    
 
 		    
     else: #a better logic to avoid repeated lines of code in auto_filter function

@@ -1600,6 +1600,12 @@ async def cb_handler(client: Client, query: CallbackQuery):
                     InlineKeyboardButton('✔ Oɴ' if settings["is_shortlink"] else '✘ Oғғ',
                                          callback_data=f'setgs#is_shortlink#{settings["is_shortlink"]}#{str(grp_id)}')
                 ]
+                ],     
+                    InlineKeyboardButton('Results page',
+                                         callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{str(grp_id)}'),
+                    InlineKeyboardButton('button' if settings["is_shortlink"] else 'pages,
+                                         callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{str(grp_id)}')
+                ]		    
             ]
             reply_markup = InlineKeyboardMarkup(buttons)
             await query.message.edit_reply_markup(reply_markup)

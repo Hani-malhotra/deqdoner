@@ -48,6 +48,7 @@ class temp(object):
     VERIFY = {}
     SEND_ALL_TEMP = {}
     KEYWORD = {}
+    CAP = {}
 
 async def is_subscribed(bot, query=None, userid=None):
     try:

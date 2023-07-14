@@ -1950,7 +1950,8 @@ async def auto_filter(client, msg, spoll=False):
                 await fek.delete()
                 await message.delete()
         finally:
-            await dlt.delete()			    
+            await dlt.delete()	
+    await dlt.delete()			
     else:
         fuk = await message.reply_photo(photo=NOR_IMG, caption=cap, reply_markup=InlineKeyboardMarkup(btn))			    
         try:	
@@ -1963,9 +1964,9 @@ async def auto_filter(client, msg, spoll=False):
             await asyncio.sleep(600)
             await fuk.delete()
             await message.delete()
-        finally:
-            await dlt.delete()			
-    await dlt.delete()	
+        #finally:
+            #await dlt.delete()			
+    #await dlt.delete()	
     if spoll:
         await msg.message.delete()
 

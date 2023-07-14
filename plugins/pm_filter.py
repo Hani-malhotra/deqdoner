@@ -1968,7 +1968,7 @@ async def auto_filter(client, msg, spoll=False):
         #finally:
             #await dlt.delete()	
     
-    await dlt.delete()	
+    #await dlt.delete()	
     if spoll:
         await msg.message.delete()
 

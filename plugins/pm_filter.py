@@ -1905,7 +1905,6 @@ async def auto_filter(client, msg, spoll=False):
             url=imdb['url'],
             **locals()
         )
-    await dlt.delete()    
     else:
         cap = f"<b>Hᴇʏ {message.from_user.mention}, Hᴇʀᴇ ɪs Wʜᴀᴛ I Fᴏᴜɴᴅ Iɴ Mʏ Dᴀᴛᴀʙᴀsᴇ Fᴏʀ Yᴏᴜʀ Qᴜᴇʀʏ {search}.</b>"
     if imdb and imdb.get('poster'):
@@ -1968,7 +1967,7 @@ async def auto_filter(client, msg, spoll=False):
         #finally:
             #await dlt.delete()	
     
-    #await dlt.delete()	
+    await dlt.delete()	
     if spoll:
         await msg.message.delete()
 

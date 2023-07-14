@@ -1604,7 +1604,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 ],     
                     InlineKeyboardButton('Results page',
                                          callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{str(grp_id)}'),
-                    InlineKeyboardButton('button' if settings["is_shortlink"] else 'pages,
+                    InlineKeyboardButton('button' if settings["is_shortlink"] else 'pages',
                                          callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{str(grp_id)}')
                 ]		    
             ]

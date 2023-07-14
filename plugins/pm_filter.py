@@ -1734,7 +1734,7 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
 # page link
 
 async def auto_filter(client, msg, spoll=False):
-    dlt=await msg.reply_sticker('CAACAgUAAxkBAAFRBttksUjfRYgc1cwTOjz_L_Ru9JAgsgAC8gEAAq4xRgWP08FkZeQVpx4E')
+    dlt = await msg.reply_sticker('CAACAgUAAxkBAAFRBttksUjfRYgc1cwTOjz_L_Ru9JAgsgAC8gEAAq4xRgWP08FkZeQVpx4E')
     reqstr1 = msg.from_user.id if msg.from_user else 0
     reqstr = await client.get_users(reqstr1)
     if not spoll:
@@ -1870,6 +1870,8 @@ async def auto_filter(client, msg, spoll=False):
         btn.append(
             [InlineKeyboardButton(text="𝐍𝐎 𝐌𝐎𝐑𝐄 𝐏𝐀𝐆𝐄𝐒 𝐀𝐕𝐀𝐈𝐋𝐀𝐁𝐋𝐄",callback_data="pages")]
         )
+        finally:
+            await dlt.delete()		    
     imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None
     TEMPLATE = settings['template']
     if imdb:

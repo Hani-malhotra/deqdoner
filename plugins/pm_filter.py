@@ -1953,6 +1953,7 @@ async def auto_filter(client, msg, spoll=False):
             await dlt.delete()	
     		
     else:
+	await dlt.delete()	
         fuk = await message.reply_photo(photo=NOR_IMG, caption=cap, reply_markup=InlineKeyboardMarkup(btn))			    
         try:	
             if settings['auto_delete']:
@@ -1966,8 +1967,8 @@ async def auto_filter(client, msg, spoll=False):
             await message.delete()
         #finally:
             #await dlt.delete()	
-    finally:
-        await dlt.delete()	
+    
+    await dlt.delete()	
     if spoll:
         await msg.message.delete()
 

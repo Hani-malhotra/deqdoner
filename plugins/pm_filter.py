@@ -1949,6 +1949,8 @@ async def auto_filter(client, msg, spoll=False):
                 await asyncio.sleep(600)
                 await fek.delete()
                 await message.delete()
+        finally:
+            await dlt.delete()			    
     else:
         fuk = await message.reply_photo(photo=NOR_IMG, caption=cap, reply_markup=InlineKeyboardMarkup(btn))			    
         try:	

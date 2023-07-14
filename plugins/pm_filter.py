@@ -1909,9 +1909,7 @@ async def auto_filter(client, msg, spoll=False):
         cap = f"<b>Hᴇʏ {message.from_user.mention}, Hᴇʀᴇ ɪs Wʜᴀᴛ I Fᴏᴜɴᴅ Iɴ Mʏ Dᴀᴛᴀʙᴀsᴇ Fᴏʀ Yᴏᴜʀ Qᴜᴇʀʏ {search}.</b>"
     if imdb and imdb.get('poster'):
         try:
-            hehe = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024], reply_markup=InlineKeyboardMarkup(btn))
-            finally:
-                await dlt.delete()			
+            hehe = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024], reply_markup=InlineKeyboardMarkup(btn))		
             try:
                 if settings['auto_delete']:
                     await asyncio.sleep(600)
@@ -1922,6 +1920,8 @@ async def auto_filter(client, msg, spoll=False):
                 await asyncio.sleep(600)
                 await hehe.delete()
                 await message.delete()
+            finally:
+                await dlt.delete()			    
         except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
             pic = imdb.get('poster')
             poster = pic.replace('.jpg', "._V1_UX360.jpg")

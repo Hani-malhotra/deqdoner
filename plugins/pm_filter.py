@@ -1905,6 +1905,7 @@ async def auto_filter(client, msg, spoll=False):
             url=imdb['url'],
             **locals()
         )
+    await dlt.delete()    
     else:
         cap = f"<b>Hᴇʏ {message.from_user.mention}, Hᴇʀᴇ ɪs Wʜᴀᴛ I Fᴏᴜɴᴅ Iɴ Mʏ Dᴀᴛᴀʙᴀsᴇ Fᴏʀ Yᴏᴜʀ Qᴜᴇʀʏ {search}.</b>"
     if imdb and imdb.get('poster'):
@@ -1952,10 +1953,8 @@ async def auto_filter(client, msg, spoll=False):
         finally:
             await dlt.delete()	
     		
-    else:
-		
-        fuk = await message.reply_photo(photo=NOR_IMG, caption=cap, reply_markup=InlineKeyboardMarkup(btn)),
-	await dlt.delete()
+    else:	
+        fuk = await message.reply_photo(photo=NOR_IMG, caption=cap, reply_markup=InlineKeyboardMarkup(btn))	
         try:	
             if settings['auto_delete']:
                 await asyncio.sleep(600)

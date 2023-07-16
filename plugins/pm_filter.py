@@ -1736,6 +1736,7 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
 async def auto_filter(client, msg, spoll=False):
     #dlt = await msg.reply_sticker('CAACAgUAAxkBAAFRBttksUjfRYgc1cwTOjz_L_Ru9JAgsgAC8gEAAq4xRgWP08FkZeQVpx4E')
     #dlt = await msg.reply_text('searching')
+    message = msg
     btn = [[
         InlineKeyboardButton("<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")
     ]]

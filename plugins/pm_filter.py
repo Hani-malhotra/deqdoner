@@ -1736,11 +1736,11 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
 async def auto_filter(client, msg, spoll=False):
     #dlt = await msg.reply_sticker('CAACAgUAAxkBAAFRBttksUjfRYgc1cwTOjz_L_Ru9JAgsgAC8gEAAq4xRgWP08FkZeQVpx4E')
     #dlt = await msg.reply_text('searching')
-    message = msg
-    btn = [[
-        InlineKeyboardButton("<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")
-    ]]
-    dlt = await message.reply_sticker('CAACAgIAAxkBAAEJsj9ksnMy2J79ogEmayN3mWOKMj2UgAACYgEAAj0N6AQb5sCBchFveC8E', reply_markup=InlineKeyboardMarkup(btn))#reply_markup=InlineKeyboardMarkup[[InlineKeyboardButton("<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")]]
+    #message = msg
+    #btn = [[
+        #InlineKeyboardButton("<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")
+    #]]
+    #dlt = await message.reply_sticker('CAACAgIAAxkBAAEJsj9ksnMy2J79ogEmayN3mWOKMj2UgAACYgEAAj0N6AQb5sCBchFveC8E', reply_markup=InlineKeyboardMarkup(btn))#reply_markup=InlineKeyboardMarkup[[InlineKeyboardButton("<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")]]
     reqstr1 = msg.from_user.id if msg.from_user else 0
     reqstr = await client.get_users(reqstr1)
     if not spoll:
@@ -1766,7 +1766,7 @@ async def auto_filter(client, msg, spoll=False):
         search, files, offset, total_results = spoll
         settings = await get_settings(message.chat.id)
     btn = [[
-        InlineKeyboardButton("<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")
+        InlineKeyboardButton(f"<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")
     ]]
     dlt = await message.reply_sticker('CAACAgIAAxkBAAEJsj9ksnMy2J79ogEmayN3mWOKMj2UgAACYgEAAj0N6AQb5sCBchFveC8E', reply_markup=InlineKeyboardMarkup(btn))#reply_markup=InlineKeyboardMarkup[[InlineKeyboardButton(f"<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")]]	    
     temp.SEND_ALL_TEMP[message.from_user.id] = files

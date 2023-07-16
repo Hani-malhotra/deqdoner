@@ -1766,7 +1766,7 @@ async def auto_filter(client, msg, spoll=False):
         search, files, offset, total_results = spoll
         settings = await get_settings(message.chat.id)
     btn = [[
-        InlineKeyboardButton(f"<b>Searching  🔍  for '{search}'</b>", callback_data=f"close_data")
+        InlineKeyboardButton(f"Searching  🔍  for {search}", callback_data=f"close_data")
     ]]
     dlt = await message.reply_sticker('CAACAgIAAxkBAAEJsj9ksnMy2J79ogEmayN3mWOKMj2UgAACYgEAAj0N6AQb5sCBchFveC8E', reply_markup=InlineKeyboardMarkup(btn))#reply_markup=InlineKeyboardMarkup[[InlineKeyboardButton(f"<b><i> Searching  🔍  for '{search}' </i></b>", callback_data=f"close_data")]]	    
     temp.SEND_ALL_TEMP[message.from_user.id] = files

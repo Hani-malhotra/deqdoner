@@ -16,7 +16,7 @@ from info import ADMINS, AUTH_CHANNEL, AUTH_USERS, SUPPORT_CHAT_ID, CUSTOM_FILE_
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid
-from utils import get_size, is_subscribed, get_poster, search_gagala, temp, get_settings, save_group_settings, get_shortlink, send_all, check_verification, get_token
+from utils import replace_username, get_size, is_subscribed, get_poster, search_gagala, temp, get_settings, save_group_settings, get_shortlink, send_all, check_verification, get_token
 from database.users_chats_db import db
 from database.ia_filterdb import Media, get_file_details, get_search_results, get_bad_files
 from database.filters_mdb import (
@@ -128,11 +128,11 @@ async def next_adv_page(bot, page):
             ENABLE_SHORTLINK = False		    
         if ENABLE_SHORTLINK: # if shortlink is enabled
             shorted = await get_shortlink(page.message.chat.id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
-            cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {replace_username(file.file_name)}</a></b>"
             i+=1
         else:
             link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
-            cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {replace_username(file.file_name)}</a></b>"
             i+=1
     btn = [] #[[
         #InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
@@ -1727,11 +1727,11 @@ async def advance_filter(client, msg, spoll=False): #text type autofilter (witho
             ENABLE_SHORTLINK = False	    
         if ENABLE_SHORTLINK: # if shortlink is enabled
             shorted = await get_shortlink(message.chat.id, f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}")
-            cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            cap+=f"<b>\n\n<a href={shorted}>{i}. [{get_size(file.file_size)}] {replace_username(file.file_name)}</a></b>"
             i+=1
         else:
             link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
-            cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
+            cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {replace_username(file.file_name)}</a></b>"
             i+=1
     btn = [] #[[
         #InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn

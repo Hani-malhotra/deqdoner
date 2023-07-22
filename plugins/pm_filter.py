@@ -168,7 +168,7 @@ async def next_adv_page(bot, page):
 	    parse_mode=enums.ParseMode.HTML
         )
         await page.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(btn) #edit btns
+            reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True) #edit btns
         )
     except MessageNotModified: #if message not modified exception occurred
         pass

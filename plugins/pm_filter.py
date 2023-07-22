@@ -1679,6 +1679,7 @@ async def advance_filter(client, msg, spoll=False): #text type autofilter (witho
         chat_id = message.chat.id
         search, files, offset, total = spoll
         settings = await get_settings(chat_id) #fetch settings
+	await msg.message.delete()
     temp.CHAT[int(message.from_user.id)] = message.chat.id #set chat id
     imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None # fetch poster and caption from imdb if enabled
     TEMPLATE = settings['template'] #fetch template (custom)

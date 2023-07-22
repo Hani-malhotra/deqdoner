@@ -172,12 +172,13 @@ async def next_adv_page(bot, page):
         )
     except MessageNotModified: #if message not modified exception occurred
         pass
-    except FloodWait as e: # if floodwait occurred
-        await page.answer(f"Got FloodWait ! Wait for {e.value} seconds...", show_alert=True)
-        await asyncio.sleep(e.value) # sleep for specified time
-        await page.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(btn) # edit btns
-	)
+    await query.answer()
+    #except FloodWait as e: # if floodwait occurred
+        #await page.answer(f"Got FloodWait ! Wait for {e.value} seconds...", show_alert=True)
+        #await asyncio.sleep(e.value) # sleep for specified time
+        #await page.edit_message_reply_markup(
+            #reply_markup=InlineKeyboardMarkup(btn) # edit btns
+	#)
 
 
 #page link

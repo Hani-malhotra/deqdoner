@@ -1,6 +1,6 @@
 import logging
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid, ChatAdminRequired
-from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, SHORTLINK_URL, SHORTLINK_API, LOG_CHANNEL, GRP_LNK, CHNL_LNK, CUSTOM_FILE_CAPTION, IS_VERIFY, VERIFY2_URL, VERIFY2_API, PROTECT_CONTENT, HOW_TO_VERIFY
+from info import REPLACE_WORDS, AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, SHORTLINK_URL, SHORTLINK_API, LOG_CHANNEL, GRP_LNK, CHNL_LNK, CUSTOM_FILE_CAPTION, IS_VERIFY, VERIFY2_URL, VERIFY2_API, PROTECT_CONTENT, HOW_TO_VERIFY
 from imdb import Cinemagoer 
 import asyncio
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
@@ -730,3 +730,11 @@ async def check_verification(bot, userid):
                 return True
         else:
             return True
+
+async def replace_words(string):
+    prohibitedWords = REPLACE_WORDS
+    big_regex = re.compile(r'(\s?(' + '|'.join(map(re.escape, prohibitedWords)) + r')\b\s?)|(\s?\b(' + '|'.join(map(re.escape, prohibitedWords)) + r')\s?)')
+    formatted = big_regex.sub(lambda match: match.group().replace(match.group(2) or match.group(4), ""), string)
+    return formatted.replace("-"," ")
+
+

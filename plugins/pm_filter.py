@@ -163,12 +163,12 @@ async def next_adv_page(bot, page):
     if len(cap)>1024: # if CAPTION_TOO_LONG
         cap = cap.replace(temp.CAP.get(key), f"<b>Hey {page.from_user.mention}, Here are the results for your query {search}!</b>")
     try:
-        await page.message.edit_text(
-            text=cap, #edit text
-	    parse_mode=enums.ParseMode.HTML
-        )
-        await page.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(btn)) #disable_web_page_preview=True) #edit btns
+        #await page.message.edit_text(
+            #text=cap, #edit text
+	    #parse_mode=enums.ParseMode.HTML
+        #)
+        await page.message.edit_text(text=cap,
+            reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True) #edit btns
         
     except MessageNotModified: #if message not modified exception occurred
         pass

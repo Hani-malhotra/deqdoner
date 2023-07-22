@@ -1974,8 +1974,8 @@ async def auto_filter(client, msg, spoll=False):
                 await asyncio.sleep(600)
                 await hehe.delete()
                 await message.delete()
-            finally:
-                await dlt.delete()			    
+            #finally:
+                #await dlt.delete()			    
         except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
             pic = imdb.get('poster')
             poster = pic.replace('.jpg', "._V1_UX360.jpg")

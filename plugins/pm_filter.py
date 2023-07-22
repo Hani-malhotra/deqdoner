@@ -1731,7 +1731,7 @@ async def advance_filter(client, msg, spoll=False): #text type autofilter (witho
             link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
             cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
             i+=1
-    btn = [] [[
+    btn = [] #[[
         #InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
     #]]
     if len(cap)>1024: #if CAPTION_TOO_LONG

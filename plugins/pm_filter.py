@@ -1657,8 +1657,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
     await query.answer(MSG_ALRT)
 # page link
 
-async def advance_filter(client, msg, is_callback=False): #text type autofilter (without buttons)
-    if not is_callback: #if msg is not callback
+async def advance_filter(client, msg, spoll=False): #text type autofilter (without buttons)
+    if not spoll: #if msg is not callback
         settings = await get_settings(msg.chat.id) #fetch settings
         if msg.text.startswith("/") or re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", msg.text): return #ignore cmds
         if len(msg.text) < 100: #allow msgs only with characters less than 100
@@ -1676,7 +1676,7 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
     else:
         message = msg.message.reply_to_message #msg will be callback
         chat_id = message.chat.id
-        search, files, offset, total = is_callback
+        search, files, offset, total = spoll
         settings = await get_settings(chat_id) #fetch settings
     temp.CHAT[int(message.from_user.id)] = message.chat.id #set chat id
     imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None # fetch poster and caption from imdb if enabled
@@ -1772,7 +1772,7 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
         await asyncio.sleep(600)
         await fuk.delete()
         await message.delete()
-    if is_callback:
+    if spoll:
         await msg.message.delete()
 
 # page link

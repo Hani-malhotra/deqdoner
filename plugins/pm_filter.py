@@ -134,9 +134,9 @@ async def next_adv_page(bot, page):
             link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
             cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
             i+=1
-    btn = [[
-        InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
-    ]]
+    #btn = [[
+        #InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
+    #]]
     # main page algorithm
     if 0 < offset <= 10:
         off_set = 0
@@ -1731,9 +1731,9 @@ async def advance_filter(client, msg, is_callback=False): #text type autofilter 
             link = f"https://telegram.me/{temp.U_NAME}?start=files_{file.file_id}"
             cap+=f"<b>\n\n<a href={link}>{i}. [{get_size(file.file_size)}] {file.file_name}</a></b>"
             i+=1
-    btn = [[
-        InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
-    ]]
+    #btn = [[
+        #InlineKeyboardButton("Join Now", url="t.me/free_movies_all_languages") #btn
+    #]]
     if len(cap)>1024: #if CAPTION_TOO_LONG
         cap = cap.replace(temp_cap, f"<b>Hey {message.from_user.mention}, Here are the results for your query {search} !</b>") #Replace IMDb template
     if offset != "": #if offset is not ""

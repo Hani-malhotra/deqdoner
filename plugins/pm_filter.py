@@ -556,7 +556,7 @@ async def advantage_spoll_choker(bot, query):
     await query.answer(script.TOP_ALRT_MSG)
     gl = await global_filters(bot, query.message, text=movie)
     if gl == False:
-        settings = await get_settings(message.chat.id)	
+        settings = await get_settings(query.message.chat.id)	
         if settings['filter_mode']:	    
             k = await manual_filters(bot, query.message, text=movie)
             if k == False:

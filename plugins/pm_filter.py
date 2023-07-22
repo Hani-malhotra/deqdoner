@@ -41,7 +41,7 @@ SPELL_CHECK = {}
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def give_filter(client, message):
     settings = await get_settings(message.chat.id)	
-    if settings['button']:
+    if settings['filter_mode']:
         if message.chat.id != SUPPORT_CHAT_ID:
             glob = await global_filters(client, message)
             if glob == False:
@@ -1631,7 +1631,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 [     
                     InlineKeyboardButton('Results page',
                                          callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{str(grp_id)}'),
-                    InlineKeyboardButton('button' if settings["is_shortlink"] else 'pages',
+                    InlineKeyboardButton('button' if settings["filter_mode"] else 'pages',
                                          callback_data=f'setgs#filter_mode#{settings["filter_mode"]}#{str(grp_id)}')
                 ]		    
             ]
